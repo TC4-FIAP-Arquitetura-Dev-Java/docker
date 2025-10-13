@@ -27,7 +27,7 @@ if not exist "ms-usuario" (
 )
 
 :: URL do docker-compose.yaml
-set "GIST_RAW_URL=https://gist.githubusercontent.com/Ghustavo516/1af457b58af74e9e72b80746092c28ed/raw/e09c484702ff2088714baba1b0febd6e2102edeb/docker-compose-tc3.yaml"
+set "GIST_RAW_URL=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/docker/blob/5aaf1763ff5eb92d83791308aed4776f88b1d195/docker-compose.yml"
 
 :: Verifica se curl está disponível
 where curl >nul 2>nul

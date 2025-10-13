@@ -24,7 +24,7 @@ REPO_USUARIO="https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-usuario"
 [ ! -d "ms-usuario" ] && git clone "$REPO_USUARIO"
 
 # URL do Gist do docker-compose.yaml
-GIST_RAW_URL="https://gist.githubusercontent.com/Ghustavo516/1af457b58af74e9e72b80746092c28ed/raw/e09c484702ff2088714baba1b0febd6e2102edeb/docker-compose-tc3.yaml"
+GIST_RAW_URL="https://github.com/TC4-FIAP-Arquitetura-Dev-Java/docker/blob/5aaf1763ff5eb92d83791308aed4776f88b1d195/docker-compose.yml"
 
 # Baixar docker-compose.yaml
 if command_exists curl; then
