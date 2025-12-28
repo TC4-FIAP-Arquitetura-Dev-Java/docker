@@ -19,10 +19,10 @@ REPO_FEEDBACK="https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-feedback"
 REPO_COLLETIONS="https://github.com/TC4-FIAP-Arquitetura-Dev-Java/collections"
 
 # Clonar se os diretórios não existirem
-[ ! -d "ms-login" ] && git clone "REPO_LOGIN"
-[ ! -d "ms-usuario" ] && git clone "REPO_USUARIO"
-[ ! -d "ms-feedback" ] && git clone "REPO_FEEDBACK"
-[ ! -d "colletions" ] && git clone "REPO_COLLETIONS"
+[ ! -d "ms-login" ] && git clone "$REPO_LOGIN"
+[ ! -d "ms-usuario" ] && git clone "$REPO_USUARIO"
+[ ! -d "ms-feedback" ] && git clone "$REPO_FEEDBACK"
+[ ! -d "colletions" ] && git clone "$REPO_COLLETIONS"
 
 # URL do Gist
 GIST_RAW_URL="https://gist.githubusercontent.com/Ghustavo516/2681a752b3c718d50e6985751983e867/raw/58c1c281b2177c64be78481d8380882f2e9e1aad/docker-compose-tc4.yml"
@@ -36,4 +36,4 @@ else
 fi
 
 # Subir containers
-$DOCKER_COMPOSE_COMMAND up -d
+$DOCKER_COMPOSE_COMMAND up -d || { echo "Falha ao subir containers"; exit 1; }
