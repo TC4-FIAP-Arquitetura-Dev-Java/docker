@@ -1,0 +1,101 @@
+services:
+  # ================== MS-USUARIO ==================
+  ms-usuario:
+    build: ./ms-usuario
+    container_name: ms-usuario
+    restart: always
+    ports:
+      - "${USUARIO_PORT}:${USUARIO_PORT}"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      SPRING_DATASOURCE_URL: ${MONGO_USUARIO_HOST}
+      SPRING_DATASOURCE_PORT: ${MONGO_USUARIO_PORT}
+      SPRING_DATASOURCE_DATABASE: ${MONGO_USUARIO_DB}
+      SPRING_DATASOURCE_USERNAME: ${MONGO_USUARIO_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MONGO_USUARIO_PASS}
+      SPRING_DATASOURCE_AUTH: admin
+    depends_on:
+      db-usuarios:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-usuarios:
+    image: mongo
+    container_name: msusuario-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USUARIO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_USUARIO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_USUARIO_DB}
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-usuario-data:/data/db
+
+
+  # ================== MS-FEEDBACK ==================
+  ms-feedback:
+    build: ./ms-feedback
+    container_name: ms-feedback
+    restart: always
+    ports:
+      - "${FEEDBACK_PORT}:${FEEDBACK_PORT}"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      SPRING_DATASOURCE_URL: ${MONGO_FEEDBACK_HOST}
+      SPRING_DATASOURCE_PORT: ${MONGO_FEEDBACK_PORT}
+      SPRING_DATASOURCE_DATABASE: ${MONGO_FEEDBACK_DB}
+      SPRING_DATASOURCE_USERNAME: ${MONGO_FEEDBACK_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MONGO_FEEDBACK_PASS}
+      SPRING_DATASOURCE_AUTH: admin
+    depends_on:
+      db-feedback:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-feedback:
+    image: mongo
+    container_name: msfeedback-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_FEEDBACK_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_FEEDBACK_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_FEEDBACK_DB}
+    ports:
+      - "27018:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-feedback-data:/data/db
+
+
+  # ================== LOGIN ==================
+  ms-login:
+    build: ./ms-login
+    container_name: ms-login
+    restart: always
+    ports:
+      - "${LOGIN_PORT}:${LOGIN_PORT}"
+    depends_on:
+      ms-usuario:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+    networks:
+      - local-network
+
+volumes:
+  ms-usuario-data:
+  ms-feedback-data:
+
+networks:
+  local-network:
+    driver: bridge

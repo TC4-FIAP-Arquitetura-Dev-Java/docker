@@ -19,15 +19,27 @@ if %ERRORLEVEL%==0 (
 )
 
 :: URLs dos repositórios
-set "REPO_USUARIO=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-usuario"
+set "REPO_LOGIN=https://github.com/TC-FIAP-HOSPITAL/ms-login"
+set "REPO_AGENDAMENTO=https://github.com/TC-FIAP-HOSPITAL/ms-agendamento"
+set "REPO_HISTORICO=https://github.com/TC-FIAP-HOSPITAL/ms-historico"
+set "REPO_NOTIFICACAO=https://github.com/TC-FIAP-HOSPITAL/ms-notificacao"
 
 :: Clonar se os diretórios não existirem
-if not exist "ms-usuario" (
-    git clone %REPO_USUARIO%
+if not exist "ms-login" (
+    git clone %REPO_LOGIN%
+)
+if not exist "ms-agendamento" (
+    git clone %REPO_AGENDAMENTO%
+)
+if not exist "ms-historico" (
+    git clone %REPO_HISTORICO%
+)
+if not exist "ms-notificacao" (
+    git clone %REPO_NOTIFICACAO%
 )
 
 :: URL do docker-compose.yaml
-set "GIST_RAW_URL=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/docker/blob/5aaf1763ff5eb92d83791308aed4776f88b1d195/docker-compose.yml"
+set "GIST_RAW_URL=https://gist.githubusercontent.com/Ghustavo516/3894e3c8f64ca917c9325a6b74e9c7a8/raw/3a314f4e15acc1c9b86e7763c851b3fa61baddfd/tc3-docker-compose.yaml"
 
 :: Verifica se curl está disponível
 where curl >nul 2>nul

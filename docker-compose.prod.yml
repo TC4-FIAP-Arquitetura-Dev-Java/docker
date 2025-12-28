@@ -1,0 +1,87 @@
+services:
+  ms-usuario:
+    image: ms-usuario:latest
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      spring.data.mongodb.host: ${MONGO_USUARIO_HOST}
+      spring.data.mongodb.port: ${MONGO_USUARIO_PORT}
+      spring.data.mongodb.database: ${MONGO_USUARIO_DB}
+      spring.data.mongodb.username: ${MONGO_USUARIO_USER}
+      spring.data.mongodb.password: ${MONGO_USUARIO_PASS}
+      USUARIO_PORT: ${USUARIO_PORT}
+    depends_on:
+      db-usuarios:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-usuarios:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USUARIO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_USUARIO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_USUARIO_DB}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-usuario-data:/data/db
+
+  ms-feedback:
+    image: ms-feedback:latest
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      spring.data.mongodb.host: ${MONGO_FEEDBACK_HOST}
+      spring.data.mongodb.port: ${MONGO_FEEDBACK_PORT}
+      spring.data.mongodb.database: ${MONGO_FEEDBACK_DB}
+      spring.data.mongodb.username: ${MONGO_FEEDBACK_USER}
+      spring.data.mongodb.password: ${MONGO_FEEDBACK_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+      FEEDBACK_PORT: ${FEEDBACK_PORT}
+    depends_on:
+      db-feedback:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-feedback:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_FEEDBACK_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_FEEDBACK_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_FEEDBACK_DB}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-feedback-data:/data/db
+
+  ms-login:
+    image: ms-login:latest
+    restart: always
+    depends_on:
+      ms-usuario:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      USUARIO_HOST: ${USUARIO_HOST}
+      JWT_ACCESS_TOKEN: ${JWT_ACCESS_TOKEN}
+      JWT_REFRESH_TOKEN: ${JWT_REFRESH_TOKEN}
+    networks:
+      - local-network
+
+volumes:
+  ms-usuario-data:
+  ms-feedback-data:
+
+networks:
+  local-network:
+    driver: bridge
