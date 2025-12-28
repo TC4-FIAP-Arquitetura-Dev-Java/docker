@@ -1,0 +1,98 @@
+services:
+  ms-usuario:
+    build: ./ms-usuario
+    restart: always
+    ports:
+      - "9083:9083"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      spring.data.mongodb.host: db-usuarios
+      spring.data.mongodb.port: 27017
+      spring.data.mongodb.database: usuarios
+      spring.data.mongodb.username: usuarios
+      spring.data.mongodb.password: admin
+      USUARIO_PORT: 9083
+    depends_on:
+      db-usuarios:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-usuarios:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: usuarios
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: usuarios
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-usuario-data:/data/db
+    networks:
+      - local-network
+
+  ms-feedback:
+    image: ./ms-feedback
+    restart: always
+    ports:
+      - "9084:9084"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      spring.data.mongodb.host: db-feedback
+      spring.data.mongodb.port: 27017
+      spring.data.mongodb.database: feedback
+      spring.data.mongodb.username: feedback
+      spring.data.mongodb.password: admin
+      JWT_SECRET: Q2hhdEdQdHNhVmFsaWRhQmFzZTY0S2V5QWNjZXNzMTIzNDU2Nzg5MDEy
+      FEEDBACK_PORT: 9084
+    depends_on:
+      db-feedback:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  db-feedback:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: feedback
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: feedback
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ms-feedback-data:/data/db
+    networks:
+      - local-network
+
+  ms-login:
+    image: ./ms-login
+    restart: always
+    ports:
+      - "9082:9082"
+    depends_on:
+      ms-usuario:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      USUARIO_HOST: http://ms-usuario:9083/ms-usuario/v1/
+      JWT_ACCESS_TOKEN: Q2hhdEdQdHNhVmFsaWRhQmFzZTY0S2V5QWNjZXNzMTIzNDU2Nzg5MDEy
+      JWT_REFRESH_TOKEN: UmVmcmVzaFRva2VuU2VjdXJlQmFzZTY0S2V5VGVzdDEyMzQ1Njc4OTA=
+      LOGIN_PORT: 9082
+    networks:
+      - local-network
+
+volumes:
+  ms-usuario-data:
+  ms-feedback-data:
+
+networks:
+  local-network:
+    driver: bridge
