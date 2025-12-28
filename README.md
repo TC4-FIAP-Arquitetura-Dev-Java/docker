@@ -1,78 +1,98 @@
+🚀 Tech Challenge FIAP – Ambiente de Desenvolvimento e Produção
 
-🚀 Ambiente de Desenvolvimento e Produção - Tech Challenge FIAP
+Este repositório utiliza **Docker** para orquestrar a arquitetura completa dos microsserviços:
 
-Este projeto utiliza Docker para subir e gerenciar toda a arquitetura dos microsserviços:
+- **ms-login**
+- **ms-usuario**
+- **ms-feedback**
 
-- ms-login
-- ms-usuario
-- ms-feedback
-
-Agora o ambiente conta com diferentes configurações para desenvolvimento e produção, permitindo execução local ou deploy em servidor.
+A infraestrutura conta com ambientes **separados para Desenvolvimento e Produção**, permitindo execução local ou deploy em servidores com facilidade e padronização.
 
 -------------------------------------------------------------------------------
-📦 O que é configurado?
+📦 Funcionalidades Principais
 
-- Ambientes separados dev e prod
-- Containers dos microserviços + bancos MongoDB
-- Arquivos .env para controle de variáveis sensíveis
-- Volumes para persistência dos bancos
-- Subida automática dos serviços via Docker Compose
+- Ambientes independentes: **dev** e **prod**
+- Containers para microserviços + bancos **MongoDB**
+- Configuração via arquivos **.env**
+- Volumes para persistência de dados
+- Deploy simplificado com **Docker Compose**
+- Build automático no ambiente de desenvolvimento
 
 -------------------------------------------------------------------------------
 ✅ Pré-requisitos
 
-Docker + Docker Compose - Executar microsserviços e bancos em containers
-Java 21+ - Necessário para rodar os microserviços
-Git - Clonar os repositórios do projeto
-Postman/Insomnia (opcional) - Testes dos endpoints
-DBeaver/Compass (opcional) - Visualizar os bancos MongoDB
+- **Docker + Docker Compose** – execução dos containers
+- **Java 21+** – necessário para rodar os microsserviços
+- **Git** – para clonar o projeto
+- **Postman / Insomnia (opcional)** – testes de API
+- **Compass / DBeaver (opcional)** – visualização do MongoDB
 
 -------------------------------------------------------------------------------
-📂 Estrutura esperada do projeto
+📂 Estrutura recomendada do projeto
 
+```
 /seu-diretorio/
 ├─ ms-login/
 ├─ ms-usuario/
 ├─ ms-feedback/
-├─ docker-compose.dev.yml      (Ambiente Dev)
-├─ docker-compose.prod.yml     (Ambiente Prod)
-├─ .env.dev                    (Dev)
-└─ .env.prod                   (Prod)
+├─ docker-compose.dev.yml      ← Ambiente Dev
+├─ docker-compose.prod.yml     ← Ambiente Prod
+├─ .env.dev                    ← Variáveis Dev
+└─ .env.prod                   ← Variáveis Prod
+```
 
 -------------------------------------------------------------------------------
-▶ Como rodar o projeto
+▶ Como executar o ambiente
 
-🔧 Ambiente de Desenvolvimento
+🔧 **Ambiente de Desenvolvimento** (com rebuild automático)
+```
 docker compose --env-file .env.dev -f docker-compose.dev.yml up -d --build
+```
 
-Logs:
+Ver logs:
+```
 docker compose -f docker-compose.dev.yml logs -f
+```
 
-🚀 Ambiente de Produção
+🚀 **Ambiente de Produção**
+```
 docker compose --env-file .env.prod -f docker-compose.prod.yml up -d
+```
 
-Parar:
+Parar ambiente Prod:
+```
 docker compose --env-file .env.prod -f docker-compose.prod.yml down
+```
 
 -------------------------------------------------------------------------------
-🔍 Observações importantes
+🔍 Observações Importantes
 
-- Dev recompila com --build
-- Em prod recomenda-se gerar imagens manualmente:
-  docker build -t ms-usuario ./ms-usuario
-  docker build -t ms-feedback ./ms-feedback
-  docker build -t ms-login ./ms-login
+- No **dev** utilize `--build` para reconstruir imagens ao alterar código
+- Em **produção**, recomenda-se build manual:
 
-- Atualize credenciais no .env.prod
-- Volumes mantêm os dados do banco
+```
+docker build -t ms-usuario ./ms-usuario
+docker build -t ms-feedback ./ms-feedback
+docker build -t ms-login ./ms-login
+```
+
+- Atualize credenciais no **.env.prod**
+- Volumes garantem persistência dos dados do MongoDB
 
 -------------------------------------------------------------------------------
-🧪 Testando a API
+🧪 Testes de API
 
-http://localhost:9083  → ms-usuario
-http://localhost:9084  → ms-feedback
-http://localhost:9082  → ms-login
+Acessos locais:
 
-Use Postman/Insomnia para testar endpoints.
+- http://localhost:9083 → **ms-usuario**
+- http://localhost:9084 → **ms-feedback**
+- http://localhost:9082 → **ms-login**
+
+Use Postman/Insomnia para executar requisições.
+
+-------------------------------------------------------------------------------
+📌 Contribuição
+
+Fique à vontade para abrir PRs e sugestões. 🙂
 
 -------------------------------------------------------------------------------
