@@ -1,92 +1,121 @@
-🚀 Tech Challenge FIAP – Ambiente de Desenvolvimento e Produção
+# 🚀 Tech Challenge FIAP – Microsserviços com Docker
 
-Este repositório utiliza **Docker** para orquestrar a arquitetura completa dos microsserviços:
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
+![Docker](https://img.shields.io/badge/Docker-24.0-blue?style=for-the-badge&logo=docker)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green?style=for-the-badge&logo=mongodb)
+![Spring](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen?style=for-the-badge&logo=springboot)
 
-- **ms-login**
-- **ms-usuario**
-- **ms-feedback**
+Este repositório contém a arquitetura completa de microsserviços do **Tech Challenge FIAP**. Utilizamos Docker e Docker Compose para orquestrar os serviços e garantir que o ambiente de desenvolvimento e produção seja idêntico e fácil de subir.
 
-A infraestrutura conta com ambientes **separados para Desenvolvimento e Produção**, permitindo execução local ou deploy em servidores com facilidade e padronização.
+---
 
--------------------------------------------------------------------------------
-📦 Funcionalidades Principais
+## 📌 Microsserviços Incluídos
 
-- Ambientes independentes: **dev** e **prod**
-- Containers para microserviços + bancos **MongoDB**
-- Configuração via arquivos **.env**
-- Volumes para persistência de dados
-- Deploy simplificado com **Docker Compose**
-- Build automático no ambiente de desenvolvimento
+O ecossistema é composto por três serviços principais:
+1.  **ms-login**: Responsável pela autenticação e segurança.
+2.  **ms-usuario**: Gestão de perfis e dados de usuários.
+3.  **ms-feedback**: Coleta e análise de feedbacks.
 
--------------------------------------------------------------------------------
-✅ Pré-requisitos
+---
 
-- **Docker + Docker Compose** – execução dos containers
-- **Java 21+** – necessário para rodar os microsserviços
-- **Git** – para clonar o projeto
-- **Postman / Insomnia (opcional)** – testes de API
-- **Compass / DBeaver (opcional)** – visualização do MongoDB
+## 📦 Funcionalidades do Ambiente
 
--------------------------------------------------------------------------------
-📂 Estrutura recomendada do projeto
+* **Orquestração Centralizada**: Controle total via `docker-compose.yml`.
+* **Persistência de Dados**: Bancos de dados MongoDB individuais com volumes configurados.
+* **Documentação Integrada**: Cada API possui sua própria interface Swagger UI.
+* **Testes Facilitados**: Coleção do Postman inclusa para validação imediata.
 
-```
-/seu-diretorio/
-├─ ms-login/
-├─ ms-usuario/
-├─ ms-feedback/
-├─ docker-compose.dev.yml      ← Ambiente Dev
-├─ docker-compose.prod.yml     ← Ambiente Prod
-├─ .env.dev                    ← Variáveis Dev
-└─ .env.prod                   ← Variáveis Prod
-```
+---
 
--------------------------------------------------------------------------------
-▶ Como executar o ambiente
+## 🔧 Requisitos Mínimos
 
-🔧 **Ambiente de Desenvolvimento** (com rebuild automático)
-```
-docker compose --env-file .env.dev -f docker-compose.dev.yml up -d --build
-```
+| Ferramenta | Finalidade | Versão Sugerida |
+| :--- | :--- | :--- |
+| **Docker + Compose** | Subir o ambiente completo | 24.0+ / 2.20+ |
+| **Java JDK** | Desenvolvimento/Execução via IDE | 21 |
+| **Git** | Clonagem do repositório | - |
+| **Postman / Insomnia** | Testar os endpoints das APIs | - |
+| **MongoDB Compass** | Visualizar dados nos bancos | (Opcional) |
 
-Ver logs:
-```
-docker compose -f docker-compose.dev.yml logs -f
+---
+
+## 📂 Estrutura do Projeto
+
+```text
+/
+├── ms-login/           # Código fonte do serviço de login
+├── ms-usuario/         # Código fonte do serviço de usuários
+├── ms-feedback/        # Código fonte do serviço de feedback
+├── collections/        # JSON para importação no Postman
+└── docker-compose.yml  # Arquivo de orquestração global
 ```
 
-🚀 **Ambiente de Produção**
-```
-docker compose --env-file .env.prod -f docker-compose.prod.yml up -d
-```
+## ▶️ Como Executar o Projeto
 
-Parar ambiente Prod:
-```
-docker compose --env-file .env.prod -f docker-compose.prod.yml down
-```
+### ⚙️ Uso dos Scripts Automáticos
 
--------------------------------------------------------------------------------
-🔍 Observações Importantes
+Este repositório inclui scripts para facilitar o uso do ambiente.
 
-- No **dev** utilize `--build` para reconstruir imagens ao alterar código
-- Em **produção**, recomenda-se build manual:
-
+#### 🐧 Linux / MacOS
 ```
-docker build -t ms-usuario ./ms-usuario
-docker build -t ms-feedback ./ms-feedback
-docker build -t ms-login ./ms-login
+chmod +x setup.sh
+./setup.sh
 ```
 
-- Atualize credenciais no **.env.prod**
-- Volumes garantem persistência dos dados do MongoDB
+#### 🪟 Windows
 
--------------------------------------------------------------------------------
-🧪 Testes de API
+```
+setup.bat
+```
 
-Acessos locais:
+Esses scripts realizam o download de todos os repositorios e inicializam a construção dos containers para uso da aplicação
 
-- http://localhost:9083 → **ms-usuario**
-- http://localhost:9084 → **ms-feedback**
-- http://localhost:9082 → **ms-login**
+## ▶️ Subir aplicação manualmente
+### Certifique-se de estar no diretório raiz do projeto antes de executar os comandos abaixo e ter os repositorios em diretorio raiz.
+1. Subir todo o ambiente (Background)
+```
+docker compose up -d
+```
+2. Monitorar logs dos serviços
+```
+docker compose logs -f
+```
+3. Parar a execução
+```
+docker compose down
+```
+4. Reset total (Limpeza profunda)
+####    ⚠️ Atenção: Isso apagará todos os containers, imagens e volumes de dados.
+```
+docker compose down --rmi all --volumes
+```
 
-Use Postman/Insomnia para executar requisições.
+## 🔗 Endpoints Swagger UI (Documentação)
 
+Após subir os containers, acesse as documentações nos links abaixo:
+
+| Serviço | URL de Acesso |
+| :--- | :--- |
+| **ms-login** | [http://localhost:9082/swagger-ui/index.html](http://localhost:9082/swagger-ui/index.html) |
+| **ms-usuario** | [http://localhost:9083/swagger-ui/index.html](http://localhost:9083/swagger-ui/index.html) |
+| **ms-feedback** | [http://localhost:9084/swagger-ui/index.html](http://localhost:9084/swagger-ui/index.html) |
+
+---
+
+## 🗄️ Conexão com Bancos de Dados (MongoDB)
+
+| Banco | String de Conexão |
+| :--- | :--- |
+| **Usuários** | `mongodb://usuarios:admin@localhost:27018/usuarios?authSource=admin` |
+| **Feedback** | `mongodb://feedback:admin@localhost:27019/feedback?authSource=admin` |
+
+---
+
+## 🧪 Testes de API
+Importe o arquivo de coleção localizado em:
+
+```
+./collections/TechChallenge.postman_collection.json
+```
+
+Este arquivo contém cenários de teste pré-configurados para todos os fluxos dos microsserviços.
