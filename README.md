@@ -90,9 +90,3 @@ Acessos locais:
 
 Use Postman/Insomnia para executar requisições.
 
--------------------------------------------------------------------------------
-📌 Contribuição
-
-Fique à vontade para abrir PRs e sugestões. 🙂
-
--------------------------------------------------------------------------------
