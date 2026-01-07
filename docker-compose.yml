@@ -7,12 +7,11 @@ services:
       - "9083:9083"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: db-usuarios
-      SPRING_DATASOURCE_PORT: 27017
-      SPRING_DATASOURCE_DATABASE: usuarios
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-usuarios:3306/usuarios?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: usuarios
       SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       USUARIO_PORT: 9083
     depends_on:
       db-usuarios:
@@ -20,20 +19,22 @@ services:
     networks: [local-network]
 
   db-usuarios:
-    image: mongo:6.0
+    image: mysql:8.0
     restart: always
     ports:
-      - "27018:27017"
+      - "3307:3306"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: usuarios
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: usuarios
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: usuarios
+      MYSQL_USER: usuarios
+      MYSQL_PASSWORD: admin
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uusuarios", "-padmin"]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes: [ms-usuario-data:/data/db]
+    volumes:
+      - ms-usuario-data:/var/lib/mysql
     networks: [local-network]
 
   ms-feedback:
@@ -43,11 +44,11 @@ services:
       - "9084:9084"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: db-feedback
-      SPRING_DATASOURCE_PORT: 27017
-      SPRING_DATASOURCE_DATABASE: feedback
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-feedback:3306/feedback?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: feedback
       SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       FEEDBACK_PORT: 9084
       JWT_SECRET: "Q2hhdEdQdHNhVmFsaWRhQmFzZTY0S2V5QWNjZXNzMTIzNDU2Nzg5MDEy"
     depends_on:
@@ -56,20 +57,22 @@ services:
     networks: [local-network]
 
   db-feedback:
-    image: mongo:6.0
+    image: mysql:8.0
     restart: always
     ports:
-      - "27019:27017"
+      - "3308:3306"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: feedback
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: feedback
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: feedback
+      MYSQL_USER: feedback
+      MYSQL_PASSWORD: admin
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ufeedback", "-padmin"]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes: [ms-feedback-data:/data/db]
+    volumes:
+      - ms-feedback-data:/var/lib/mysql
     networks: [local-network]
 
   ms-login:
