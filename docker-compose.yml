@@ -6,7 +6,7 @@ services:
     ports:
       - "9083:9083"
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:mysql://db-usuarios:3306/usuarios?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: usuarios
       SPRING_DATASOURCE_PASSWORD: admin
@@ -43,7 +43,7 @@ services:
     ports:
       - "9084:9084"
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:mysql://db-feedback:3306/feedback?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: feedback
       SPRING_DATASOURCE_PASSWORD: admin
