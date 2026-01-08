@@ -12,6 +12,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      JWT_SECRET: "Q2hhdEdQdHNhVmFsaWRhQmFzZTY0S2V5QWNjZXNzMTIzNDU2Nzg5MDEy"
       USUARIO_PORT: 9083
     depends_on:
       db-usuarios:
