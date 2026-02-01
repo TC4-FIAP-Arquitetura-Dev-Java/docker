@@ -19,9 +19,10 @@ if %ERRORLEVEL%==0 (
 )
 
 :: URLs dos repositórios
-set "REPO_LOGIN=https://github.com/Hackathon-Fiap-TC5/ms-login"
-set "REPO_USUARIO=https://github.com/Hackathon-Fiap-TC5/ms-usuario"
-set "REPO_AGENDAMENTO=https://github.com/Hackathon-Fiap-TC5/ms-agendamento"
+set "REPO_LOGIN=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-login"
+set "REPO_USUARIO=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-usuario"
+set "REPO_FEEDBACK=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/ms-feedback"
+set "REPO_COLLETIONS=https://github.com/TC4-FIAP-Arquitetura-Dev-Java/collections"
 
 :: Clonar se os diretórios não existirem
 if not exist "ms-login" (
@@ -30,8 +31,11 @@ if not exist "ms-login" (
 if not exist "ms-usuario" (
     git clone %REPO_USUARIO%
 )
-if not exist "ms-agendamento" (
-    git clone %REPO_AGENDAMENTO%
+if not exist "ms-feedback" (
+    git clone %REPO_FEEDBACK%
+)
+if not exist "collections" (
+    git clone %REPO_COLLETIONS%
 )
 
 :: URL do docker-compose.yaml
